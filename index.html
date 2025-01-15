@@ -4,7 +4,110 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI教育平等平台</title>
-  <link rel="stylesheet" href="./style.css">
+  <style>
+/* 基础样式 */
+body {
+  font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+/* 布局容器 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 页眉样式 */
+header {
+  text-align: center;
+  padding: 40px 0;
+  background-color: #007bff;
+  color: white;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+/* 内容区域 */
+section {
+  margin: 40px 0;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* 下载按钮 */
+.download-links {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* 微信公众号区域 */
+.wechat {
+  text-align: center;
+  padding: 20px;
+}
+
+.wechat img {
+  max-width: 200px;
+  height: auto;
+  margin: 20px 0;
+}
+
+/* 页脚 */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #333;
+  color: white;
+  margin-top: 40px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .download-links {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 80%;
+    text-align: center;
+  }
+}
+</style>
 </head>
 <body>
   <header>
@@ -38,6 +141,49 @@
     <p>© 2024 AI教育平等平台. 保留所有权利.</p>
   </footer>
 
-  <script src="./script.js"></script>
+  <script>
+// 页面加载动画
+document.addEventListener('DOMContentLoaded', function() {
+  document.body.style.opacity = '0';
+  setTimeout(() => {
+    document.body.style.transition = 'opacity 0.5s ease';
+    document.body.style.opacity = '1';
+  }, 100);
+});
+
+// 按钮点击效果
+const buttons = document.querySelectorAll('.btn');
+buttons.forEach(button => {
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    this.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      this.style.transform = 'scale(1)';
+    }, 200);
+  });
+});
+
+// 滚动动画
+const sections = document.querySelectorAll('section');
+const options = {
+  threshold: 0.2
+};
+
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, options);
+
+sections.forEach(section => {
+  section.style.opacity = '0';
+  section.style.transform = 'translateY(20px)';
+  section.style.transition = 'all 0.6s ease';
+  observer.observe(section);
+});
+</script>
 </body>
 </html>
