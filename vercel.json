@@ -8,17 +8,27 @@
   ],
   "routes": [
     {
-      "src": "/(.*\\.(png|jpg|jpeg|gif|ico|svg))",
+      "src": "/(.*\\.(png|jpg|jpeg|gif|svg))",
       "headers": {
         "Cache-Control": "public, max-age=31536000",
-        "Content-Type": "image/$1"
+        "Content-Type": "image/$1",
+        "X-Content-Type-Options": "nosniff"
+      }
+    },
+    {
+      "src": "/favicon.ico",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000",
+        "Content-Type": "image/x-icon",
+        "X-Content-Type-Options": "nosniff"
       }
     },
     {
       "src": "/(.*)",
       "dest": "/index.html",
       "headers": {
-        "Cache-Control": "public, max-age=3600"
+        "Cache-Control": "public, max-age=3600",
+        "X-Content-Type-Options": "nosniff"
       }
     }
   ]
