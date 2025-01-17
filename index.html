@@ -240,7 +240,7 @@ sections.forEach(section => {
   observer.observe(section);
 });
 function downloadApk() {
-  fetch('app-debug.apk')
+  fetch('https://github.com/ChenHaiPei-value/ai-education-platform/releases/download/v1.0.0/app-debug.apk')
     .then(response => response.blob())
     .then(blob => {
       const url = window.URL.createObjectURL(blob);
