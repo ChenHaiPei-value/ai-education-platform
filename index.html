@@ -91,6 +91,88 @@ footer {
   margin-top: 40px;
 }
 
+/* 团队介绍样式 */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 30px;
+  align-items: start;
+  margin-bottom: 40px;
+}
+
+.profile-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.profile-content h3 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.title {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.experience-list {
+  columns: 2;
+  margin: 20px 0;
+}
+
+.experience-list li {
+  margin-bottom: 8px;
+}
+
+.summary {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+/* 寻找合伙人样式 */
+.partner-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.partner-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.partner-content h3 {
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.partner-list li {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.partner-list strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.cta {
+  margin-top: 30px;
+  padding: 20px;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  text-align: center;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   header h1 {
@@ -106,6 +188,26 @@ footer {
     width: 80%;
     text-align: center;
   }
+
+  .profile-grid,
+  .partner-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .profile-image,
+  .partner-image {
+    text-align: center;
+  }
+
+  .profile-image img,
+  .partner-image img {
+    max-width: 150px;
+  }
+
+  .experience-list {
+    columns: 1;
+  }
 }
 </style>
 </head>
@@ -119,6 +221,57 @@ footer {
     <h2>关于我们</h2>
     <p>AI生成高质量教育为基础，具身机器技术全民化，推动智能科技普惠发展。</p>
     <p>未来我们将转型为非营利性基金会，100%由基金会控制，持续推动人类加速迈向更智能的未来。我们致力于通过技术创新和教育普及，让更多人受益于智能科技的发展。</p>
+
+    <h2>团队介绍</h2>
+    <div class="team-intro">
+      <div class="profile-grid">
+        <div class="profile-image">
+          <img src="./2.png" alt="陈海培">
+        </div>
+        <div class="profile-content">
+          <h3>陈海培</h3>
+          <p class="title">13D DAO创始人，独立开发者</p>
+          <p>曾就职于多家知名对冲基金，包括：</p>
+          <ul class="experience-list">
+            <li>三和宏信投资</li>
+            <li>瑞鑫天算</li>
+            <li>仟富来</li>
+            <li>淘利</li>
+            <li>猛虎</li>
+            <li>久阳资本</li>
+            <li>不繁私募</li>
+            <li>复利维新</li>
+          </ul>
+          <p class="summary">职业经历涵盖从下单员到量化交易员、量化基金经理，并曾担任60亿身家大佬私人助理。</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>寻找合伙人</h2>
+    <div class="partner-search">
+      <div class="partner-grid">
+        <div class="partner-image">
+          <img src="./1.png" alt="寻找合伙人">
+        </div>
+        <div class="partner-content">
+          <h3>加入我们</h3>
+          <p>我们正在寻找以下领域的合伙人：</p>
+          <ul class="partner-list">
+            <li>
+              <strong>技术合伙人</strong>
+              <p>具备智能体、去中心化、区块链、AI基础、编程基础、具身智能等技术背景</p>
+            </li>
+            <li>
+              <strong>资金合伙人</strong>
+              <p>具有长期主义投资理念，认同我们的愿景和使命</p>
+            </li>
+          </ul>
+          <div class="cta">
+            <p>如果您对我们的项目感兴趣，欢迎通过微信公众号联系我们。</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="products">
