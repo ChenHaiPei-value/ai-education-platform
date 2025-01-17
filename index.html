@@ -240,12 +240,20 @@ sections.forEach(section => {
   observer.observe(section);
 });
 function downloadApk() {
-  const link = document.createElement('a');
-  link.href = 'app-debug.apk';
-  link.download = 'app-debug.apk';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  fetch('app-debug.apk')
+    .then(response => response.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = 'app-debug.apk';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    })
+    .catch(() => alert('下载失败，请稍后重试'));
 }
 </script>
 </body>
