@@ -240,20 +240,13 @@ sections.forEach(section => {
   observer.observe(section);
 });
 function downloadApk() {
-  fetch('https://github.com/ChenHaiPei-value/ai-education-platform/releases/download/v1.0.0/app-debug.apk')
-    .then(response => response.blob())
-    .then(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = 'app-debug.apk';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    })
-    .catch(() => alert('下载失败，请稍后重试'));
+  const link = document.createElement('a');
+  link.href = 'https://github.com/ChenHaiPei-value/ai-education-platform/releases/download/v1.0.0/app-debug.apk';
+  link.download = 'app-debug.apk';
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 </script>
 </body>
