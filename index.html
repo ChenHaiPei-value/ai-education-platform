@@ -179,7 +179,7 @@ footer {
   <section id="download">
     <h2>下载APP</h2>
     <div class="download-links">
-      <a href="app-debug.apk" download class="btn">Android 下载</a>
+      <a href="#" onclick="downloadApk()" class="btn">Android 下载</a>
       <a href="#" class="btn">iOS 下载</a>
     </div>
   </section>
@@ -239,6 +239,14 @@ sections.forEach(section => {
   section.style.transition = 'all 0.6s ease';
   observer.observe(section);
 });
+function downloadApk() {
+  const link = document.createElement('a');
+  link.href = 'app-debug.apk';
+  link.download = 'app-debug.apk';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 </script>
 </body>
 </html>
