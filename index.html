@@ -146,44 +146,91 @@ footer {
 }
 
 /* 团队介绍样式 */
+.team-section {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.team-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.team-header h2 {
+  color: #007bff;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
 .profile-grid {
   display: grid;
   grid-template-columns: 200px 1fr;
-  gap: 30px;
+  gap: 40px;
   align-items: start;
-  margin-bottom: 40px;
+  margin-bottom: 60px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.profile-grid:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
 .profile-image img {
   width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .profile-content h3 {
   color: #007bff;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
 }
 
 .title {
-  color: #666;
+  color: #007bff;
+  opacity: 0.8;
   margin-bottom: 20px;
+  font-weight: 500;
 }
 
 .experience-list {
   columns: 2;
   margin: 20px 0;
+  padding-left: 20px;
 }
 
 .experience-list li {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  padding-left: 15px;
+}
+
+.experience-list li::before {
+  content: "•";
+  color: #007bff;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .summary {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 4px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
   margin-top: 20px;
+  border: 1px solid rgba(0,123,255,0.1);
+}
+
+/* 轮播图与团队介绍间距 */
+.team-section .swiper {
+  margin-bottom: 60px;
 }
 
 /* 寻找合伙人样式 */
@@ -276,24 +323,32 @@ footer {
     <p>AI生成高质量教育为基础，具身机器技术全民化，推动智能科技普惠发展。</p>
     <p>未来我们将转型为非营利性基金会，100%由基金会控制，持续推动人类加速迈向更智能的未来。我们致力于通过技术创新和教育普及，让更多人受益于智能科技的发展。</p>
 
-    <h2>团队介绍</h2>
-    <!-- 新增轮播组件 -->
-    <div class="swiper mySwiper">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <img src="./1.png" alt="团队照片">
+    <div class="team-section">
+      <div class="team-header">
+        <h2>团队介绍</h2>
+        <p>我们是一支由行业专家和技术精英组成的团队</p>
+      </div>
+      
+      <!-- 轮播组件 -->
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img src="./1.png" alt="团队照片">
+          </div>
+          <div class="swiper-slide">
+            <img src="./2.png" alt="陈海培">
+          </div>
         </div>
-        <div class="swiper-slide">
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+      <div class="profile-grid">
+        <div class="profile-image">
           <img src="./2.png" alt="陈海培">
         </div>
-      </div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-pagination"></div>
-    </div>
-
-    <div class="profile-grid">
-      <div class="profile-content">
+        <div class="profile-content">
           <h3>陈海培</h3>
           <p class="title">13D DAO 创始人</p>
           <p>曾就职于多家知名对冲基金，包括：</p>
@@ -308,7 +363,9 @@ footer {
             <li>复利维新</li>
           </ul>
           <p>网络电子书著作《陈海培的资管世界：认识世界，借资本之力，改造世界》</p>
-          <p class="summary">职业经历涵盖从下单员到量化交易员、量化基金经理，并曾担任60亿身家大佬私人助理。</p>
+          <div class="summary">
+            <p>职业经历涵盖从下单员到量化交易员、量化基金经理，并曾担任60亿身家大佬私人助理。</p>
+          </div>
         </div>
       </div>
     </div>
