@@ -4,7 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>13D DAO</title>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <style>
+    /* 新增轮播样式 */
+    .swiper {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px 0;
+      height: 400px;
+    }
+
+    .swiper-slide {
+      text-align: center;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .swiper-slide img {
+      width: auto;
+      height: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #007bff;
+      background: rgba(255,255,255,0.8);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 20px;
+    }
+
+    .swiper-pagination-bullet {
+      background: #007bff;
+      opacity: 0.5;
+    }
+
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+    }
+
 /* 基础样式 */
 body {
   font-family: 'Segoe UI', 'PingFang SC', sans-serif;
@@ -223,15 +277,23 @@ footer {
     <p>未来我们将转型为非营利性基金会，100%由基金会控制，持续推动人类加速迈向更智能的未来。我们致力于通过技术创新和教育普及，让更多人受益于智能科技的发展。</p>
 
     <h2>团队介绍</h2>
-    <div class="team-intro">
-      <div class="team-image">
-        <img src="./1.png" alt="团队照片">
-      </div>
-      <div class="profile-grid">
-        <div class="profile-image">
+    <!-- 新增轮播组件 -->
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img src="./1.png" alt="团队照片">
+        </div>
+        <div class="swiper-slide">
           <img src="./2.png" alt="陈海培">
         </div>
-        <div class="profile-content">
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <div class="profile-grid">
+      <div class="profile-content">
           <h3>陈海培</h3>
           <p class="title">13D DAO 创始人</p>
           <p>曾就职于多家知名对冲基金，包括：</p>
@@ -392,6 +454,24 @@ sections.forEach(section => {
   section.style.transition = 'all 0.6s ease';
   observer.observe(section);
 });
+
+// 新增轮播初始化
+const swiper = new Swiper('.mySwiper', {
+  loop: true,
+  autoplay: {
+    delay: 3000,
+    disableOnInteraction: false,
+  },
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+  },
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+});
+
 function downloadApk() {
   const link = document.createElement('a');
   link.href = 'https://github.com/ChenHaiPei-value/ai-education-platform/releases/download/v1.0.0/app-debug.apk';
@@ -402,5 +482,7 @@ function downloadApk() {
   document.body.removeChild(link);
 }
 </script>
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
