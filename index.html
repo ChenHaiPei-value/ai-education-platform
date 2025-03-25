@@ -29,12 +29,70 @@
       padding: 0 20px;
     }
     
+    /* 导航栏样式 */
+    nav {
+      background: rgba(26, 26, 46, 0.9);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(110, 69, 226, 0.3);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--secondary);
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+    
+    .nav-links a {
+      color: var(--light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+    
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    
     header {
       background: linear-gradient(135deg, var(--primary), #4a00e0);
-      padding: 60px 0;
+      padding: 100px 0 60px;
       text-align: center;
       position: relative;
       overflow: hidden;
+      margin-top: 60px;
     }
     
     header::after {
@@ -194,6 +252,15 @@
         font-size: 2rem;
       }
       
+      .nav-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-links {
+        gap: 15px;
+      }
+      
       .token-grid, .project-grid {
         grid-template-columns: 1fr;
       }
@@ -201,6 +268,19 @@
   </style>
 </head>
 <body>
+  <!-- 导航栏 -->
+  <nav>
+    <div class="container nav-container">
+      <a href="#" class="logo">13D DAO</a>
+      <div class="nav-links">
+        <a href="#about">关于我们</a>
+        <a href="#token">13D代币</a>
+        <a href="#projects">DAO项目</a>
+        <a href="#community">加入社区</a>
+      </div>
+    </div>
+  </nav>
+
   <header>
     <div class="container">
       <h1>13D DAO</h1>
@@ -214,10 +294,12 @@
 
   <section id="about">
     <div class="container">
-      <h2 class="section-title">关于13D DAO</h2>
+      <h2 class="section-title">关于13D DAO基金会</h2>
       <div class="card">
-        <p>13D DAO是一个去中心化自治组织，致力于通过区块链技术和人工智能推动金融平权和经济民主化。我们的使命是打破传统金融壁垒，构建一个更加公平、透明的全球金融新秩序。</p>
-        <p>我们相信，通过去中心化存储、去中心化自治和AI金融的结合，可以实现真正的金融平权，让每个人都能平等地参与全球金融体系。</p>
+        <h3>13D DAO-P0: 金融平权革命</h3>
+        <p>13D DAO基金会是一个去中心化自治组织，致力于通过区块链技术和人工智能推动金融平权和经济民主化。我们的P0项目是金融平权革命，目标是打破传统金融壁垒，构建一个更加公平、透明的全球金融新秩序。</p>
+        <p>我们相信，通过去中心化存储、去中心化自治和AI金融的结合，可以实现真正的金融平权，让每个人都能平等地参与全球金融体系。13D DAO将带领社区成员一起走资本压榨剩余价值的路，走CEX的路，走顶级私募策略的路，走顶级财团的路，让其无路可走。</p>
+        <p>我们的愿景是让世界金融、投资、理财、资产配置，通过无中心化存储、去中心化自治、去中心化终端和AI金融，实现真正的金融平权。基金会将利用区块链技术的透明性和不可篡改性，确保所有决策和资金使用公开透明。</p>
       </div>
     </div>
   </section>
@@ -263,6 +345,7 @@
       
       <div class="card" style="margin-top: 30px;">
         <h3>代币信息</h3>
+        <p>13D代币是我们基金会的治理代币，类似于股权。持有13D代币即成为13D DAO的成员，享有治理权和收益分配权。</p>
         <p>欢迎持有13D DAO的治理代币13D</p>
         <p>代币地址: <a href="https://solscan.io/token/Kf2UHsG9N617Nu6egFneDYH8WUZ45Y4WDV5NbzZEQ4L" style="color: var(--accent);">Solscan查看</a></p>
         <p>募集资金全部归基金会所有，基金会资金使用决策属于全体持有者，决策和资金用途去处公开透明。</p>
@@ -272,112 +355,39 @@
 
   <section id="projects">
     <div class="container">
-      <h2 class="section-title">13D DAO 项目</h2>
+      <h2 class="section-title">13D DAO 项目生态</h2>
       <div class="project-grid">
         <div class="card">
           <h3>13D DAO-P1: pingdengqi</h3>
-          <p>AI实现快速完成基础教育，提升全球教育公平性，具身机器技术大众化，智能劳动力公平分配和普及。</p>
+          <p>通过AI技术快速完成基础教育，提升全球教育公平性。项目将开发自适应学习系统，结合具身机器技术，实现智能劳动力公平分配和普及。目标是让全球每个人都能获得优质教育资源，打破教育壁垒。</p>
         </div>
         <div class="card">
           <h3>13D DAO-P2: ai-dfi</h3>
-          <p>去中心化金融基础设施，构建全球金融新秩序。</p>
+          <p>去中心化金融基础设施，构建全球金融新秩序。项目将开发基于区块链的金融协议，包括去中心化交易所、借贷平台和衍生品市场，完全由DAO治理，实现金融服务的民主化。</p>
         </div>
         <div class="card">
           <h3>13D DAO-P3: d-ai-shopping</h3>
-          <p>去中心化分布式智能商城。</p>
+          <p>去中心化分布式智能商城。利用AI和区块链技术构建的新型电商平台，消除中间商，实现生产者和消费者直接交易。平台将采用代币激励机制，让所有参与者共享平台发展红利。</p>
         </div>
         <div class="card">
           <h3>13D DAO-P4: d-ai-remotework</h3>
-          <p>去中心化远程工作平台，重塑未来工作方式。</p>
+          <p>去中心化远程工作平台，重塑未来工作方式。项目将构建一个基于智能合约的工作平台，实现任务发布、工作交付和报酬支付的自动化，保障工作者权益，提高工作效率。</p>
         </div>
         <div class="card">
           <h3>13D DAO-P5: d-ai-workers</h3>
-          <p>人工智能劳动力网络，推动生产力革命。</p>
+          <p>人工智能劳动力网络，推动生产力革命。项目将开发AI劳动力市场，连接AI服务和需求方，实现AI劳动力的高效配置和公平报酬分配。</p>
         </div>
         <div class="card">
           <h3>13D DAO-P6: d-ai-generatecontent</h3>
-          <p>分布式人工智能生成内容。</p>
+          <p>分布式人工智能生成内容平台。通过区块链确权AI生成内容，建立公平的内容创作和收益分配机制，保护创作者权益，促进创意产业发展。</p>
         </div>
         <div class="card">
           <h3>13D DAO-P7: d-ai-transport</h3>
-          <p>分布式交通运输。</p>
+          <p>分布式交通运输网络。利用区块链和AI优化交通资源配置，构建去中心化的共享出行平台，降低运输成本，提高效率。</p>
         </div>
         <div class="card">
           <h3>13D DAO-P8: d-ai-novelenergy</h3>
-          <p>分布式创新能源。</p>
+          <p>分布式创新能源系统。开发基于区块链的能源交易平台，促进可再生能源的生产和消费，实现能源民主化。</p>
         </div>
         <div class="card">
-          <h3>13D DAO-P9: d-ai-socialmedia</h3>
-          <p>分布式社交媒体。</p>
-        </div>
-        <div class="card">
-          <h3>13D DAO-P10: d-ai-hardware</h3>
-          <p>分布式边缘计算硬件设计制造。</p>
-        </div>
-        <div class="card">
-          <h3>13D DAO-P11: d-ai-biomedicine</h3>
-          <p>分布式生物医药，生物医药公平，拒绝垄断。</p>
-        </div>
-        <div class="card">
-          <h3>13D DAO-P12: d-ai-cosmicexploration</h3>
-          <p>分布式宇宙研究探索。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="community" style="background: rgba(26, 26, 46, 0.7);">
-    <div class="container">
-      <h2 class="section-title">加入社区</h2>
-      <div class="card" style="text-align: center;">
-        <p>欢迎加入13D DAO(13D Foundation)社区，让我们一起走资本压榨剩余价值的路，走CEX的路，走顶级私募策略的路，走顶级财团的路，让其无路可走。</p>
-        <div class="social-links">
-          <a href="https://discord.gg/8tpzQwfU" class="social-link" target="_blank">Discord</a>
-          <a href="https://x.com/pei_hai20167?t=hWIk2HYrqWH_wrflNeZjdQ&s=09" class="social-link" target="_blank">X</a>
-          <a href="https://t.me/+XrHa7ZedFAUyYTc1" class="social-link" target="_blank">Telegram</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <p>© 2025 13D DAO Foundation. 保留所有权利.</p>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    // 页面加载动画
-    document.addEventListener('DOMContentLoaded', function() {
-      document.body.style.opacity = '0';
-      setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '1';
-      }, 100);
-    });
-
-    // 滚动动画
-    const cards = document.querySelectorAll('.card');
-    const options = {
-      threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, options);
-
-    cards.forEach(card => {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(20px)';
-      card.style.transition = 'all 0.6s ease';
-      observer.observe(card);
-    });
-  </script>
-</body>
-</html>
+          <h3>13D DAO-P9: d-ai-social
