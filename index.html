@@ -3,13 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>13D DAO - 代币兑换</title>
+    <title>13D DAO - 去中心化自治组织</title>
     <style>
-        /* 保留原有样式... */
+        :root {
+            --primary: #6e45e2;
+            --secondary: #88d3ce;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --accent: #ff7e5f;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+        }
+        .hero {
+            text-align: center;
+            padding: 100px 0;
+            background: linear-gradient(rgba(26, 26, 46, 0.8), rgba(26, 26, 46, 0.9)), url('bg-pattern.png');
+            background-size: cover;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 20px;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        section {
+            padding: 80px 0;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 36px;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        .tokenomics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .roadmap {
+            position: relative;
+            padding-left: 50px;
+        }
+        .roadmap:before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 30px;
+        }
+        .roadmap-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        footer {
+            background: rgba(0,0,0,0.2);
+            padding: 50px 0;
+            text-align: center;
+        }
+        .social-links {
+            margin: 30px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 15px;
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+        }
+        .social-links img {
+            transition: transform 0.3s ease;
+        }
+        .social-links img:hover {
+            transform: scale(1.1);
+        }
+
+        /* 新增兑换界面样式 */
+        .swap-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+        }
+        .swap-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .swap-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-weight: 500;
+        }
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 16px;
+        }
+        .swap-btn {
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .swap-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .wallet-btn {
+            background: linear-gradient(to right, #9945FF, #14F195);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .wallet-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .wallet-connected {
+            background: #14F195;
+            color: #111;
+        }
+        .token-select {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .token-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            .hero p {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- 保留原有页面结构... -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="nav-links">
+                    <a href="#about">关于我们</a>
+                    <a href="#token">代币经济</a>
+                    <a href="#roadmap">融资路线</a>
+                    <a href="#projects">生态项目</a>
+                    <a href="#community">加入社区</a>
+                    <a href="#swap">代币兑换</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>构建去中心化未来</h1>
+            <p>13D DAO致力于通过区块链技术和人工智能推动全球金融平权与生产力革命，打造完全去中心化的自治生态系统。</p>
+            <a href="#swap" class="btn">立即兑换</a>
+        </div>
+    </section>
 
     <section id="swap" class="container">
         <h2 class="section-title">代币兑换</h2>
@@ -45,7 +307,100 @@
         </div>
     </section>
 
-    <!-- 其他页面内容... -->
+    <section id="about" class="container">
+        <h2 class="section-title">关于13D DAO</h2>
+        <div class="card">
+            <p>13D DAO是一个去中心化自治组织，通过发行治理代币13D实现社区治理。我们计划将13个核心项目与代币经济深度绑定，构建万亿美元市值的去中心化生态系统。</p>
+            <p>我们的愿景是打破传统金融垄断，通过无中心化存储、去中心化自治和AI金融技术，实现真正的金融平权。</p>
+        </div>
+    </section>
+
+    <section id="token" class="container">
+        <h2 class="section-title">代币经济模型</h2>
+        <div class="tokenomics">
+            <div class="card">
+                <h3>代币分配</h3>
+                <ul>
+                    <li>社区: 20%</li>
+                    <li>种子轮: 10%</li>
+                    <li>战略轮: 10%</li>
+                    <li>私募轮: 10%</li>
+                    <li>公募: 20%</li>
+                    <li>创始人: 10%</li>
+                    <li>团队激励: 10%</li>
+                    <li>13D DAO基金会: 10%</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>代币信息</h3>
+                <p>代币名称: 13D</p>
+                <p>区块链: Solana</p>
+                <p>合约地址: <a href="https://solscan.io/token/Kf2UHsG9N617Nu6egFneDYH8WUZ45Y4WDV5NbzZEQ4L" target="_blank" style="color: var(--accent);">Kf2UHsG9...ZEQ4L</a></p>
+                <p>募集资金全部归基金会所有，基金会资金使用决策属于全体持有者，决策和资金用途去处公开透明。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="container">
+        <h2 class="section-title">融资路线图</h2>
+        <div class="roadmap">
+            <div class="roadmap-item card">
+                <h3>种子轮</h3>
+                <p>估值: 1000万美元</p>
+                <p>释放代币: 10%</p>
+            </div>
+            <div class="roadmap-item card">
+                <h3>战略轮</h3>
+                <p>估值: 1亿美元</p>
+                <p>释放代币: 10%</p>
+            </div>
+            <div class="roadmap-item card">
+                <h3>私募轮</h3>
+                <p>估值: 10亿美元</p>
+                <p>释放代币: 10%</p>
+            </div>
+            <div class="roadmap-item card">
+                <h3>公开发行</h3>
+                <p>估值: 100亿美元</p>
+                <p>释放代币: 20%</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="container">
+        <h2 class="section-title">生态项目</h2>
+        <div class="projects">
+            <div class="card">
+                <h3>13D DAO-P0: 金融平权</h3>
+                <p>让我们一起走资本压榨剩余价值的路，走CEX的路，走顶级私募策略的路，走顶级财团的路，让其无路可走。让世界金融，投资，理财，资产配置，通过无中心化存储，去中心化自治无去中心化终端，AI金融，实现金融平权。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="community" class="container">
+        <h2 class="section-title">加入社区</h2>
+        <div class="card">
+            <p>欢迎加入13D DAO社区，参与去中心化未来建设。</p>
+            <div class="social-links">
+                <a href="https://discord.gg/8tpzQwfU" target="_blank">
+                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord" width="40">
+                </a>
+                <a href="https://x.com/pei_hai20167?t=hWIk2HYrqWH_wrflNeZjdQ&s=09" target="_blank">
+                    <img src="https://abs.twimg.com/favicons/twitter.3.ico" alt="Twitter(X)" width="40">
+                </a>
+                <a href="https://t.me/+XrHa7ZedFAUyYTc1" target="_blank">
+                    <img src="https://telegram.org/img/t_logo.png" alt="Telegram" width="40">
+                </a>
+            </div>
+            <p>持有13D代币即成为13D DAO治理成员，参与生态建设与决策。</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 13D DAO Foundation. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- 添加Solana Web3.js和其他必要库 -->
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
@@ -53,6 +408,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@project-serum/anchor@0.24.2/dist/anchor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-base@0.9.11/lib/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-phantom@0.9.11/lib/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-solflare@0.6.11/lib/index.min.js"></script>
     <script src="swap.js"></script>
 </body>
 </html>

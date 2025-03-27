@@ -5,26 +5,24 @@ const TOKEN_ADDRESS = 'Kf2UHsG9N617Nu6egFneDYH8WUZ45Y4WDV5NbzZEQ4L';
 const SUPPORTED_TOKENS = {
     USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
     USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    BTC: '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E',
+    BTC: '9n4nbM75f5UiussK8cChQ6xcc8WFY64FVf8sB25TKc1y',
     ETH: '2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk'
 };
 
-// 汇率 (示例值，实际需要从API获取)
+// 汇率 (示例值，实际应从API获取)
 const EXCHANGE_RATES = {
-    USDT: 1.0,
-    USDC: 1.0,
-    BTC: 50000.0,
-    ETH: 3000.0
+    USDT: 0.1,  // 1 USDT = 0.1 13D
+    USDC: 0.1,
+    BTC: 50000, // 1 BTC = 50000 13D
+    ETH: 3000   // 1 ETH = 3000 13D
 };
 
-// 初始化Solana连接
-const connection = new solanaWeb3.Connection(
-    solanaWeb3.clusterApiUrl('mainnet-beta'),
-    'confirmed'
-);
+// Solana连接配置
+const SOLANA_NETWORK = 'https://api.mainnet-beta.solana.com';
+const connection = new solanaWeb3.Connection(SOLANA_NETWORK);
 
 // 钱包适配器
-const wallet = new solanaWeb3.Wallet();
+const wallet = new solanaWallets.PhantomWalletAdapter();
 
 // DOM元素
 const connectWalletBtn = document.getElementById('connectWallet');
@@ -33,31 +31,28 @@ const fromAmountInput = document.getElementById('fromAmount');
 const toAmountInput = document.getElementById('toAmount');
 const swapBtn = document.getElementById('swapBtn');
 
-// 连接钱包
-connectWalletBtn.addEventListener('click', async () => {
+// 钱包连接状态
+let walletConnected = false;
+let publicKey = null;
+
+// 初始化钱包连接
+async function initWallet() {
     try {
-        // 使用Phantom钱包
-        const provider = window.solana;
-        if (provider) {
-            await provider.connect();
-            wallet.publicKey = provider.publicKey;
-            connectWalletBtn.textContent = `已连接: ${wallet.publicKey.toString().slice(0, 4)}...${wallet.publicKey.toString().slice(-4)}`;
-            connectWalletBtn.classList.add('wallet-connected');
-            swapBtn.disabled = false;
-        } else {
-            alert('请安装Phantom钱包!');
-        }
+        await wallet.connect();
+        publicKey = wallet.publicKey;
+        walletConnected = true;
+        connectWalletBtn.textContent = `已连接: ${publicKey.toString().slice(0, 4)}...${publicKey.toString().slice(-4)}`;
+        connectWalletBtn.classList.add('wallet-connected');
+        swapBtn.disabled = false;
+        console.log('钱包连接成功:', publicKey.toString());
     } catch (error) {
-        console.error('连接钱包失败:', error);
-        alert('连接钱包失败: ' + error.message);
+        console.error('钱包连接失败:', error);
+        alert('钱包连接失败，请重试');
     }
-});
+}
 
 // 计算兑换金额
-fromAmountInput.addEventListener('input', updateToAmount);
-fromTokenSelect.addEventListener('change', updateToAmount);
-
-function updateToAmount() {
+function calculateSwapAmount() {
     const fromToken = fromTokenSelect.value;
     const fromAmount = parseFloat(fromAmountInput.value) || 0;
     const rate = EXCHANGE_RATES[fromToken];
@@ -65,9 +60,9 @@ function updateToAmount() {
     toAmountInput.value = toAmount.toFixed(2);
 }
 
-// 执行兑换
-swapBtn.addEventListener('click', async () => {
-    if (!wallet.publicKey) {
+// 执行代币兑换
+async function executeSwap() {
+    if (!walletConnected || !publicKey) {
         alert('请先连接钱包');
         return;
     }
@@ -84,82 +79,54 @@ swapBtn.addEventListener('click', async () => {
         swapBtn.disabled = true;
         swapBtn.textContent = '处理中...';
 
-        // 1. 获取用户代币账户
-        const fromTokenAccount = await getTokenAccount(wallet.publicKey, SUPPORTED_TOKENS[fromToken]);
+        // 1. 获取代币账户
+        const fromTokenMint = new solanaWeb3.PublicKey(SUPPORTED_TOKENS[fromToken]);
+        const toTokenMint = new solanaWeb3.PublicKey(TOKEN_ADDRESS);
         
-        // 2. 获取13D代币账户
-        const toTokenAccount = await getOrCreateTokenAccount(wallet.publicKey, TOKEN_ADDRESS);
+        const fromTokenAccount = await splToken.getAssociatedTokenAddress(
+            fromTokenMint,
+            publicKey
+        );
         
-        // 3. 构建交易
-        const transaction = new solanaWeb3.Transaction();
-        
-        // 4. 添加转账指令
-        transaction.add(
-            splToken.Token.createTransferInstruction(
-                splToken.TOKEN_PROGRAM_ID,
-                fromTokenAccount.address,
-                toTokenAccount.address,
-                wallet.publicKey,
-                [],
+        const toTokenAccount = await splToken.getAssociatedTokenAddress(
+            toTokenMint,
+            publicKey
+        );
+
+        // 2. 创建交易
+        const transaction = new solanaWeb3.Transaction().add(
+            // 这里应添加实际的兑换指令
+            // 实际实现需要与兑换合约交互
+            // 以下是示例代码，需要根据实际合约调整
+            splToken.createTransferInstruction(
+                fromTokenAccount,
+                toTokenAccount,
+                publicKey,
                 fromAmount * Math.pow(10, 9) // 假设代币有9位小数
             )
         );
-        
-        // 5. 发送交易
+
+        // 3. 发送交易
         const signature = await wallet.sendTransaction(transaction, connection);
-        
-        // 6. 确认交易
         await connection.confirmTransaction(signature);
         
-        alert('兑换成功! 交易ID: ' + signature);
+        alert(`兑换成功! 交易哈希: ${signature}`);
+        console.log('交易成功:', signature);
+
     } catch (error) {
         console.error('兑换失败:', error);
-        alert('兑换失败: ' + error.message);
+        alert(`兑换失败: ${error.message}`);
     } finally {
         swapBtn.disabled = false;
         swapBtn.textContent = '兑换';
     }
-});
-
-// 获取代币账户
-async function getTokenAccount(owner, mint) {
-    const accounts = await connection.getTokenAccountsByOwner(owner, { mint });
-    if (accounts.value.length === 0) {
-        throw new Error('未找到代币账户');
-    }
-    return {
-        address: accounts.value[0].pubkey,
-        account: splToken.AccountLayout.decode(accounts.value[0].account.data)
-    };
 }
 
-// 获取或创建代币账户
-async function getOrCreateTokenAccount(owner, mint) {
-    try {
-        return await getTokenAccount(owner, mint);
-    } catch {
-        // 如果账户不存在则创建
-        const transaction = new solanaWeb3.Transaction();
-        const newAccount = solanaWeb3.Keypair.generate();
-        
-        transaction.add(
-            splToken.Token.createInitAccountInstruction(
-                splToken.TOKEN_PROGRAM_ID,
-                new solanaWeb3.PublicKey(mint),
-                newAccount.publicKey,
-                owner
-            )
-        );
-        
-        const signature = await wallet.sendTransaction(transaction, connection, {
-            signers: [newAccount]
-        });
-        
-        await connection.confirmTransaction(signature);
-        
-        return {
-            address: newAccount.publicKey,
-            account: null // 新账户，暂无数据
-        };
-    }
-}
+// 事件监听
+connectWalletBtn.addEventListener('click', initWallet);
+fromTokenSelect.addEventListener('change', calculateSwapAmount);
+fromAmountInput.addEventListener('input', calculateSwapAmount);
+swapBtn.addEventListener('click', executeSwap);
+
+// 初始化
+console.log('代币兑换界面已加载');
