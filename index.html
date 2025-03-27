@@ -15,7 +15,7 @@
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 75px 0 0; /* 补偿固定导航栏高度 */
+            padding: 0;
             background-color: var(--dark);
             color: var(--light);
             line-height: 1.6;
@@ -161,6 +161,84 @@
         .social-links img:hover {
             transform: scale(1.1);
         }
+
+        /* 新增兑换界面样式 */
+        .swap-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+        }
+        .swap-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .swap-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-weight: 500;
+        }
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 16px;
+        }
+        .swap-btn {
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .swap-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .wallet-btn {
+            background: linear-gradient(to right, #9945FF, #14F195);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .wallet-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .wallet-connected {
+            background: #14F195;
+            color: #111;
+        }
+        .token-select {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .token-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 36px;
@@ -172,13 +250,60 @@
     </style>
 </head>
 <body>
-    <iframe src="navbar.html" frameborder="0" style="width:100%; height:75px;"></iframe>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="nav-links">
+                    <a href="#about">关于我们</a>
+                    <a href="#token">代币经济</a>
+                    <a href="#roadmap">融资路线</a>
+                    <a href="#projects">生态项目</a>
+                    <a href="#community">加入社区</a>
+                    <a href="#swap">代币兑换</a>
+                </div>
+            </nav>
+        </div>
+    </header>
 
     <section class="hero">
         <div class="container">
             <h1>构建去中心化未来</h1>
             <p>13D DAO致力于通过区块链技术和人工智能推动全球金融平权与生产力革命，打造完全去中心化的自治生态系统。</p>
-            <a href="#community" class="btn">加入社区</a>
+            <a href="#swap" class="btn">立即兑换</a>
+        </div>
+    </section>
+
+    <section id="swap" class="container">
+        <h2 class="section-title">代币兑换</h2>
+        <div class="swap-container">
+            <button id="connectWallet" class="wallet-btn">连接钱包</button>
+            <div class="swap-form">
+                <div class="form-group">
+                    <label for="fromToken">从</label>
+                    <select id="fromToken" class="form-control">
+                        <option value="USDT">USDT</option>
+                        <option value="USDC">USDC</option>
+                        <option value="BTC">比特币 (BTC)</option>
+                        <option value="ETH">以太坊 (ETH)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fromAmount">数量</label>
+                    <input type="number" id="fromAmount" class="form-control" placeholder="输入数量">
+                </div>
+                <div class="form-group">
+                    <label for="toToken">兑换为</label>
+                    <div class="token-select">
+                        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" class="token-icon" alt="13D">
+                        <span>13D 代币</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="toAmount">获得数量</label>
+                    <input type="text" id="toAmount" class="form-control" placeholder="0.00" readonly>
+                </div>
+                <button id="swapBtn" class="swap-btn" disabled>兑换</button>
+            </div>
         </div>
     </section>
 
@@ -276,5 +401,14 @@
             <p>© 2025 13D DAO Foundation. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- 添加Solana Web3.js和其他必要库 -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script src="https://unpkg.com/@solana/spl-token@latest/lib/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@project-serum/anchor@0.24.2/dist/anchor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-base@0.9.11/lib/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-phantom@0.9.11/lib/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-solflare@0.6.11/lib/index.min.js"></script>
+    <script src="swap.js"></script>
 </body>
 </html>
