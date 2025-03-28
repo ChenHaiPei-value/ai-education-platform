@@ -9,16 +9,29 @@ const SUPPORTED_TOKENS = {
     ETH: '2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk'
 };
 
-// 汇率 (示例值，实际应从API获取)
-const EXCHANGE_RATES = {
-    USDT: 0.1,  // 1 USDT = 0.1 13D
-    USDC: 0.1,
-    BTC: 50000, // 1 BTC = 50000 13D
-    ETH: 3000   // 1 ETH = 3000 13D
-};
-
 // 初始化Reown AppKit
 const appkit = window.Reown.AppKit;
+
+// 获取实时汇率
+async function getExchangeRate(fromToken) {
+    try {
+        const response = await fetch(`https://api.reown.com/swap/rate?from=${SUPPORTED_TOKENS[fromToken]}&to=${TOKEN_ADDRESS}`);
+        const data = await response.json();
+        return data.rate;
+    } catch (error) {
+        console.error('获取汇率失败:', error);
+        // 返回默认汇率
+        return {
+            USDT: 0.1,
+            USDC: 0.1,
+            BTC: 50000,
+            ETH: 3000
+        }[fromToken];
+    }
+}
+
+// 交易历史记录
+window.swapHistory = [];
 
 // DOM元素
 const connectWalletBtn = document.getElementById('connectWallet');
@@ -51,12 +64,23 @@ async function initWallet() {
 }
 
 // 计算兑换金额
-function calculateSwapAmount() {
+async function calculateSwapAmount() {
     const fromToken = fromTokenSelect.value;
     const fromAmount = parseFloat(fromAmountInput.value) || 0;
-    const rate = EXCHANGE_RATES[fromToken];
-    const toAmount = fromAmount * rate;
-    toAmountInput.value = toAmount.toFixed(2);
+    
+    if (fromAmount <= 0) {
+        toAmountInput.value = '0.00';
+        return;
+    }
+
+    try {
+        const rate = await getExchangeRate(fromToken);
+        const toAmount = fromAmount * rate;
+        toAmountInput.value = toAmount.toFixed(2);
+    } catch (error) {
+        console.error('计算金额失败:', error);
+        toAmountInput.value = '0.00';
+    }
 }
 
 // 执行代币兑换
@@ -86,16 +110,56 @@ async function executeSwap() {
             slippage: 0.5 // 0.5%滑点
         });
 
-        alert(`兑换成功! 交易哈希: ${result.txHash}`);
+        // 记录交易历史
+        swapHistory.push({
+            txHash: result.txHash,
+            fromToken,
+            fromAmount,
+            toToken: '13D',
+            toAmount: toAmountInput.value,
+            timestamp: new Date().toISOString()
+        });
+
+        // 显示交易详情
+        const txUrl = `https://solscan.io/tx/${result.txHash}`;
+        alert(`兑换成功!\n交易哈希: ${result.txHash}\n查看详情: ${txUrl}`);
         console.log('兑换成功:', result);
+
+        // 更新UI
+        fromAmountInput.value = '';
+        toAmountInput.value = '0.00';
 
     } catch (error) {
         console.error('兑换失败:', error);
-        alert(`兑换失败: ${error.message}`);
+        
+        // 更详细的错误处理
+        let errorMsg = '兑换失败';
+        if (error.message.includes('insufficient funds')) {
+            errorMsg = '余额不足';
+        } else if (error.message.includes('user rejected')) {
+            errorMsg = '用户取消交易';
+        } else {
+            errorMsg = error.message;
+        }
+        
+        alert(`兑换失败: ${errorMsg}`);
     } finally {
         swapBtn.disabled = false;
         swapBtn.textContent = '兑换';
     }
+}
+
+// 显示交易历史
+function showSwapHistory() {
+    if (swapHistory.length === 0) {
+        console.log('暂无交易历史');
+        return;
+    }
+    
+    console.log('交易历史:');
+    swapHistory.forEach(tx => {
+        console.log(`[${new Date(tx.timestamp).toLocaleString()}] ${tx.fromAmount} ${tx.fromToken} → ${tx.toAmount} ${tx.toToken} (${tx.txHash})`);
+    });
 }
 
 // 事件监听
@@ -106,3 +170,23 @@ swapBtn.addEventListener('click', executeSwap);
 
 // 初始化
 console.log('代币兑换界面已加载');
+
+// 定期检查钱包状态和更新UI
+setInterval(() => {
+    if (walletConnected && publicKey) {
+        appkit.getWalletBalance(publicKey)
+            .then(balance => {
+                console.log('当前钱包余额:', balance);
+                // 触发UI更新
+                if (typeof updateWalletInfo === 'function') {
+                    updateWalletInfo(balance);
+                }
+            })
+            .catch(console.error);
+            
+        // 触发交易历史更新
+        if (typeof updateSwapHistory === 'function' && window.swapHistory) {
+            updateSwapHistory(window.swapHistory);
+        }
+    }
+}, 10000); // 每10秒检查一次
