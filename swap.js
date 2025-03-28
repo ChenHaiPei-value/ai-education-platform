@@ -17,12 +17,8 @@ const EXCHANGE_RATES = {
     ETH: 3000   // 1 ETH = 3000 13D
 };
 
-// Solana连接配置
-const SOLANA_NETWORK = 'https://api.mainnet-beta.solana.com';
-const connection = new solanaWeb3.Connection(SOLANA_NETWORK);
-
-// 钱包适配器
-const wallet = new solanaWallets.PhantomWalletAdapter();
+// 初始化Reown AppKit
+const appkit = window.Reown.AppKit;
 
 // DOM元素
 const connectWalletBtn = document.getElementById('connectWallet');
@@ -38,16 +34,19 @@ let publicKey = null;
 // 初始化钱包连接
 async function initWallet() {
     try {
-        await wallet.connect();
+        // 使用Reown AppKit连接钱包
+        const wallet = await appkit.connectWallet();
         publicKey = wallet.publicKey;
         walletConnected = true;
+        
         connectWalletBtn.textContent = `已连接: ${publicKey.toString().slice(0, 4)}...${publicKey.toString().slice(-4)}`;
         connectWalletBtn.classList.add('wallet-connected');
         swapBtn.disabled = false;
+        
         console.log('钱包连接成功:', publicKey.toString());
     } catch (error) {
         console.error('钱包连接失败:', error);
-        alert('钱包连接失败，请重试');
+        alert('钱包连接失败: ' + error.message);
     }
 }
 
@@ -79,39 +78,16 @@ async function executeSwap() {
         swapBtn.disabled = true;
         swapBtn.textContent = '处理中...';
 
-        // 1. 获取代币账户
-        const fromTokenMint = new solanaWeb3.PublicKey(SUPPORTED_TOKENS[fromToken]);
-        const toTokenMint = new solanaWeb3.PublicKey(TOKEN_ADDRESS);
-        
-        const fromTokenAccount = await splToken.getAssociatedTokenAddress(
-            fromTokenMint,
-            publicKey
-        );
-        
-        const toTokenAccount = await splToken.getAssociatedTokenAddress(
-            toTokenMint,
-            publicKey
-        );
+        // 使用Reown AppKit执行代币兑换
+        const result = await appkit.executeSwap({
+            fromToken: SUPPORTED_TOKENS[fromToken],
+            toToken: TOKEN_ADDRESS,
+            amount: fromAmount,
+            slippage: 0.5 // 0.5%滑点
+        });
 
-        // 2. 创建交易
-        const transaction = new solanaWeb3.Transaction().add(
-            // 这里应添加实际的兑换指令
-            // 实际实现需要与兑换合约交互
-            // 以下是示例代码，需要根据实际合约调整
-            splToken.createTransferInstruction(
-                fromTokenAccount,
-                toTokenAccount,
-                publicKey,
-                fromAmount * Math.pow(10, 9) // 假设代币有9位小数
-            )
-        );
-
-        // 3. 发送交易
-        const signature = await wallet.sendTransaction(transaction, connection);
-        await connection.confirmTransaction(signature);
-        
-        alert(`兑换成功! 交易哈希: ${signature}`);
-        console.log('交易成功:', signature);
+        alert(`兑换成功! 交易哈希: ${result.txHash}`);
+        console.log('兑换成功:', result);
 
     } catch (error) {
         console.error('兑换失败:', error);
